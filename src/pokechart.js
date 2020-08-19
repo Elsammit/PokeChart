@@ -61,7 +61,6 @@ export default class Cooking extends React.Component  {
             var copySpeed = this.state.Speed.slice();
             var copyParam = this.state.BaseParam.slice();
 
-            PokeNum = 1;
             if(PokeNum == 1){
                 var Name = document.getElementById("pokeName").value;
                 for(var i=1;i<result.length;i++){
@@ -82,8 +81,6 @@ export default class Cooking extends React.Component  {
                         copyParam[4] = Number(result[i]["とくぼう"]);
                         copyParam[5] = Number(result[i]["すばやさ"]);
 
-
-
                         this.setState({
                             Name:copyName,
                             Attack:copyAttack,
@@ -97,17 +94,38 @@ export default class Cooking extends React.Component  {
                     }
                 }
             }else{
-                Name2 = document.getElementById("pokeName2").value;
+                var Name2 = document.getElementById("pokeName2").value;
+                console.log("Name:"+Name2);
                 for(var i=1;i<result.length;i++){
-                    if(result[i][1] == Name2){
-                        console.log("Get Name");
-                        Name2 = result[i][1]
-                        Attack2 = result[i][8]
-                        Defense2 = result[i][9]
-                        HP2 = result[i][7]
-                        SpAtk2 = result[i][12]
-                        SpDef2 = result[i][11]
-                        Speed2 = result[i][10]
+                    if(result[i]["ポケモン名"] == Name2){
+                        console.log("Get Name2");
+                        copyName[1] = result[i]["ポケモン名"];
+                        copyAttack[1] = Number(result[i]["こうげき"]);
+                        copyDefence[1] = Number(result[i]["ぼうぎょ"]);
+                        copyHP[1] = Number(result[i]["HP"]);
+                        copySpAtk[1] = Number(result[i]["とくこう"]);
+                        copySpDef[1] = Number(result[i]["とくぼう"]);
+                        copySpeed[1] = Number(result[i]["すばやさ"]);
+                        
+                        copyParam[0] = Number(result[i]["HP"]);
+                        copyParam[1] = Number(result[i]["こうげき"]);
+                        copyParam[2] = Number(result[i]["ぼうぎょ"]);
+                        copyParam[3] = Number(result[i]["とくこう"]);
+                        copyParam[4] = Number(result[i]["とくぼう"]);
+                        copyParam[5] = Number(result[i]["すばやさ"]);
+
+                        console.log("HP input " + copyHP[1]);
+
+                        this.setState({
+                            Name:copyName,
+                            Attack:copyAttack,
+                            Defense:copyDefence,
+                            HP:copyHP,
+                            SpAtk:copySpAtk,
+                            SpDef:copySpDef,
+                            Speed:copySpeed,
+                            BaseParam:copyParam
+                        })
                     }
                 }
             }        
@@ -143,6 +161,7 @@ export default class Cooking extends React.Component  {
             }
         });
     }
+
     test = (e) =>{
         var copy = this.state.doryokuchi.slice();
         if(e.target.id.match(/pluse/)){
@@ -157,6 +176,10 @@ export default class Cooking extends React.Component  {
         })
         this.HPDoyoku();
         this.AtkDoyoku();
+        this.DefDoyoku();
+        this.CDoyoku();
+        this.BDoyoku();
+        this.SpDoyoku();
     }
 
     SetKotaichi = (e) =>{
@@ -171,18 +194,14 @@ export default class Cooking extends React.Component  {
         })
         this.HPDoyoku();
         this.AtkDoyoku();
+        this.DefDoyoku();
+        this.CDoyoku();
+        this.BDoyoku();
+        this.SpDoyoku();
     }
 
 
     HPDoyoku = () =>{
-        /*
-        if(document.getElementById("HPDoryoku") === null || document.getElementById("HPKotai") === null ||
-            document.getElementById("HPDoryoku2") === null || document.getElementById("HPKotai2") === null){
-                console.log("doryoku null !!");
-                return;
-        }
-        */
-       
         if(document.getElementById("HPDoryoku") === null || document.getElementById("HPKotai") === null ){
            console.log("doryoku null !!");
            return;
@@ -259,90 +278,128 @@ export default class Cooking extends React.Component  {
         //var DefKotai2 = document.getElementById("DefKotai2").value;
         var DefDoryoku2 = 0;
 
-        var pokeObj = new Object();
+        //var pokeObj = new Object();
     
-        pokeObj.Def = Number(Defense)+Number(DefKotai/2);
+        var copyDef = this.state.Defense.slice();
+        var BaseParam = this.state.BaseParam.slice();
+
+        copyDef[0] = BaseParam[1];
+        copyDef[0] = copyDef[0] +Number(DefKotai/2);
+    
+        //pokeObj.Def = Number(Defense)+Number(/2);
         //pokeObj.Def2 = Number(Defense)+Number(DefKotai2/2);
     
         if(DefDoryoku > 0){
-            pokeObj.Def = Number(pokeObj.Def) + Number((DefDoryoku - 4)/8);
+            //pokeObj.Def = Number(pokeObj.Def) + Number((DefDoryoku - 4)/8);
+            copyDef[0] = copyDef[0] + Number((DefDoryoku - 4)/8);
         }
     
         if(DefDoryoku2 > 0){
             //pokeObj.Def2 = Number(pokeObj.Def2) + Number((DefDoryoku2 - 4)/8);
         }
-    
-        return pokeObj;
+        console.log("DefDoryoku:"+copyDef[0]);
+        this.setState({
+            Defense:copyDef
+        })
     }
     
     BDoyoku = () =>{
         var BDoryoku = document.getElementById("BDoryoku").value;
         var BKotai = document.getElementById("BKotai").value;
-        var BDoryoku2 = document.getElementById("BDoryoku2").value;
-        var BKotai2 = document.getElementById("BKotai2").value;
+        //var BDoryoku2 = document.getElementById("BDoryoku2").value;
+        //var BKotai2 = document.getElementById("BKotai2").value;
+        var BDoryoku2 = 0;
     
-        var pokeObj = new Object();
+        //var pokeObj = new Object();
     
-        pokeObj.B = Number(SpDef)+Number(BKotai/2);
-        pokeObj.B2 = Number(SpDef)+Number(BKotai2/2);
+        //pokeObj.B = Number(SpDef)+Number(BKotai/2);
+        //pokeObj.B2 = Number(SpDef)+Number(BKotai2/2);
+
+        var copyB = this.state.SpDef.slice();
+        var BaseParam = this.state.BaseParam.slice();
+
+        copyB[0] = BaseParam[1];
+        copyB[0] = copyB[0] +Number(BKotai/2);
     
         if(BDoryoku > 0){
-            pokeObj.B = Number(pokeObj.B) + Number((BDoryoku - 4)/8);
+            //pokeObj.B = Number(pokeObj.B) + Number((BDoryoku - 4)/8);
+            copyB[0] = copyB[0] + Number((BDoryoku - 4)/8);
         }
     
         if(BDoryoku2 > 0){
-            pokeObj.B2 = Number(pokeObj.B2) + Number((BDoryoku2 - 4)/8);
+            //pokeObj.B2 = Number(pokeObj.B2) + Number((BDoryoku2 - 4)/8);
         }
-    
-        return pokeObj;
+        console.log("BDoryoku:"+copyB[0]);
+        this.setState({
+            SpDef:copyB
+        })
     }
     
     CDoyoku = () =>{
         var CDoryoku = document.getElementById("CDoryoku").value;
         var CKotai = document.getElementById("CKotai").value;
-        var CDoryoku2 = document.getElementById("CDoryoku2").value;
-        var CKotai2 = document.getElementById("CKotai2").value;
+        //var CDoryoku2 = document.getElementById("CDoryoku2").value;
+        //var CKotai2 = document.getElementById("CKotai2").value;
+        var CDoryoku2 = 0;
+
+        //var pokeObj = new Object();
     
-        var pokeObj = new Object();
-    
-        pokeObj.C = Number(SpAtk)+Number(CKotai/2);
-        pokeObj.C2 = Number(SpAtk2)+Number(CKotai2/2);
-    
+        //pokeObj.C = Number(SpAtk)+Number(CKotai/2);
+        //pokeObj.C2 = Number(SpAtk2)+Number(CKotai2/2);
+        
+        var copyC = this.state.SpAtk.slice();
+        var BaseParam = this.state.BaseParam.slice();
+
+        copyC[0] = BaseParam[1];
+        copyC[0] = copyC[0] +Number(CKotai/2);       
+
         if(CDoryoku > 0){
-            pokeObj.C = Number(pokeObj.C) + Number((CDoryoku - 4)/8);
+            copyC[0] = copyC[0] + Number((CDoryoku - 4)/8);
+            //pokeObj.C = Number(pokeObj.C) + Number((CDoryoku - 4)/8);
         }
     
         if(CDoryoku2 > 0){
-            pokeObj.C2 = Number(pokeObj.C2) + Number((CDoryoku2 - 4)/8);
+            //pokeObj.C2 = Number(pokeObj.C2) + Number((CDoryoku2 - 4)/8);
         }
-    
-        return pokeObj;
+        console.log("CDoryoku:"+copyC[0]);
+        this.setState({
+            SpAtk:copyC
+        })
     }
     
     SpDoyoku = () =>{
         var SPDoryoku = document.getElementById("SPDoryoku").value;
         var SPKotai = document.getElementById("SPKotai").value;
-        var SPDoryoku2 = document.getElementById("SPDoryoku2").value;
-        var SPKotai2 = document.getElementById("SPKotai2").value;
+        //var SPDoryoku2 = document.getElementById("SPDoryoku2").value;
+        //var SPKotai2 = document.getElementById("SPKotai2").value;
+        var SPDoryoku2 = 0;
+
+        //var pokeObj = new Object();
     
-        var pokeObj = new Object();
+        //pokeObj.Sp = Number(Speed)+Number(SPKotai/2);
+        //pokeObj.Sp2 = Number(Speed2)+Number(SPKotai2/2);
     
-        pokeObj.Sp = Number(Speed)+Number(SPKotai/2);
-        pokeObj.Sp2 = Number(Speed2)+Number(SPKotai2/2);
-    
+        var copySp = this.state.Speed.slice();
+        var BaseParam = this.state.BaseParam.slice();
+
+        copySp[0] = BaseParam[1];
+        copySp[0] = copySp[0] +Number(SPKotai/2);
+
         if(SPDoryoku > 0){
-            pokeObj.Sp = Number(pokeObj.Sp) + Number((SPDoryoku - 4)/8);
+            copySp[0] = copySp[0] + Number((SPDoryoku - 4)/8);
+            //pokeObj.Sp = Number(pokeObj.Sp) + Number((SPDoryoku - 4)/8);
         }
     
         if(SPDoryoku2 > 0){
-            pokeObj.Sp2 = Number(pokeObj.Sp2) + Number((SPDoryoku2 - 4)/8);
+            //pokeObj.Sp2 = Number(pokeObj.Sp2) + Number((SPDoryoku2 - 4)/8);
         }
-    
-        return pokeObj;
+        console.log("SppedDoryoku:"+copySp[0]);
+        this.setState({
+            Speed:copySp
+        })
     }
 
     Radar = () =>{
-        //this.HPDoyoku();
 
         const {HP} = this.state;
         const {Attack} = this.state;
@@ -352,12 +409,12 @@ export default class Cooking extends React.Component  {
         const {SpDef} = this.state;
 
         const dataRadar = [
-            { rank: 'HP', poke1: HP[0], poke2: 100 },
-            { rank: '攻撃', poke1: Attack[0], poke2: 100 },
-            { rank: '防御', poke1: Defense[0], poke2: 10 },
-            { rank: '素早さ', poke1: Speed[0], poke2: 100 },
-            { rank: '特防', poke1: SpAtk[0], poke2: 20 },
-            { rank: '特攻', poke1: SpDef[0], poke2: 10 },
+            { rank: 'HP', poke1: HP[0], poke2: HP[1] },
+            { rank: '攻撃', poke1: Attack[0], poke2: Attack[1] },
+            { rank: '防御', poke1: Defense[0], poke2: Defense[1] },
+            { rank: '素早さ', poke1: Speed[0], poke2: Speed[1] },
+            { rank: '特防', poke1: SpDef[0], poke2: SpDef[1] },
+            { rank: '特攻', poke1: SpAtk[0], poke2: SpAtk[1] },
             ];
             
         return(<RadarChart // レーダーチャートのサイズや位置、データを指定
@@ -386,22 +443,13 @@ export default class Cooking extends React.Component  {
         );
     }
 
-    render() {
-        return (<div>
-            <div className="pokename_title">
-                <h1>ポケモンチャート</h1>
-            </div>
-    <div className="pokename_title">
-        <a>ポケモン1名：</a>
-        <input type="text" id="pokeName" maxLength="20"/>
-        <input type="button" value="Click" onClick={this.getCSV}></input><br/>
-        <a>ポケモン2名：</a>
-        <input type="text" id="pokeName" maxLength="20"/>
-        <input type="button" value="Click" onClick={this.getCSV}></input><br/>
-    </div>
 
-    <div className="doryokuchi_title">
-        <p>努力値</p><br/>
+    Input_Doryokuchi = (input) =>{
+        console.log("input:"+input);
+        return(
+        <div>
+        <div className="doryokuchi_title">
+        <p>努力値</p>
     </div>
 
     <div className="input">
@@ -454,6 +502,27 @@ export default class Cooking extends React.Component  {
         <input type="button" value="-" id="minus5" onClick={this.test} className="boxform" />
     </div>
     </div>
+    </div>
+        );
+    }
+
+    render() {
+        return (<div>
+            <div className="pokename_title">
+                <h1>ポケモンチャート</h1>
+            </div>
+    <div className="pokename_title">
+        <a>ポケモン1名：</a>
+        <input type="text" id="pokeName" maxLength="20"/>
+        <input type="button" value="Click" onClick={() => this.getCSV(1)}></input><br/>
+        <a>ポケモン2名：</a>
+        <input type="text" id="pokeName2" maxLength="20"/>
+        <input type="button" value="Click" onClick={() => this.getCSV(2)}></input><br/>
+    </div>
+    
+    <div className="ParamWaku">
+        <p>ポケモン1</p>
+        {this.Input_Doryokuchi(1)}
 
     <div className="input">
     <br/>
@@ -462,7 +531,7 @@ export default class Cooking extends React.Component  {
     <br/>
     <br/>
     <div className="doryokuchi_title">
-        <p>個体値</p><br/>
+        <p>個体値</p>
     </div>
     <div className="doryokuchi_label">
         <label>H</label>
@@ -476,49 +545,163 @@ export default class Cooking extends React.Component  {
         <label>A</label>
     </div>
     <div className="doryokuchi">
-        <input type="button" value="+" id="pluse3" onClick={this.test} className="boxform" /><br/>
+        <input type="button" value="+" id="pluse11" onClick={this.SetKotaichi} className="boxform" /><br/>
         <input type="number" name="num1" min="0" max="31" value="0" step="1" id="AtkKotai" OnClick="test()"/><br/>
-        <input type="button" value="-" id="minus5" onClick={this.test} className="boxform" />
+        <input type="button" value="-" id="minus11" onClick={this.SetKotaichi} className="boxform" />
     </div>
     <div className="doryokuchi_label">
         <label>D</label>
     </div>
     <div className="doryokuchi">
-        <input type="button" value="+" id="pluse3" onClick={this.test} className="boxform" /><br/>
+        <input type="button" value="+" id="pluse22" onClick={this.SetKotaichi} className="boxform" /><br/>
         <input type="number" name="num1" min="0" max="31" value="0" step="1" id="DefKotai" OnClick="test()"/><br/>
-        <input type="button" value="-" id="minus5" onClick={this.test} className="boxform" />
+        <input type="button" value="-" id="minus22" onClick={this.SetKotaichi} className="boxform" />
     </div>
     <div className="doryokuchi_label">
         <label>C</label>
     </div>
     <div className="doryokuchi">
-        <input type="button" value="+" id="pluse3" onClick={this.test} className="boxform" /><br/>
+        <input type="button" value="+" id="pluse33" onClick={this.SetKotaichi} className="boxform" /><br/>
         <input type="number" name="num1" min="0" max="31" value="0" step="1" id="CKotai" OnClick="test()"/><br/>
-        <input type="button" value="-" id="minus5" onClick={this.test} className="boxform" />
+        <input type="button" value="-" id="minus33" onClick={this.SetKotaichi} className="boxform" />
     </div>
     <div className="doryokuchi_label">
         <label>B</label>
     </div>
     <div className="doryokuchi">
-        <input type="button" value="+" id="pluse3" onClick={this.test} className="boxform" /><br/>
+        <input type="button" value="+" id="pluse44" onClick={this.SetKotaichi} className="boxform" /><br/>
         <input type="number" name="num1" min="0" max="31" value="0" step="1" id="BKotai" OnClick="test()"/><br/>
-        <input type="button" value="-" id="minus5" onClick={this.test} className="boxform" />
+        <input type="button" value="-" id="minus44" onClick={this.SetKotaichi} className="boxform" />
     </div>
     <div className="doryokuchi_label">
         <label>S</label>
     </div>
     <div className="doryokuchi">
-        <input type="button" value="+" id="pluse3" onClick={this.test} className="boxform" /><br/>  
+        <input type="button" value="+" id="pluse55" onClick={this.SetKotaichi} className="boxform" /><br/>  
         <input type="number" name="num1" min="0" max="31" value="0" step="1" id="SPKotai" OnClick="test()"/><br/>
-        <input type="button" value="-" id="minus5" onClick={this.test} className="boxform" />
+        <input type="button" value="-" id="minus55" onClick={this.SetKotaichi} className="boxform" />
     </div>
     </div>
-    <div>
+    </div>
+    <br/>
+    <div className="ParamWaku">
+        <p>ポケモン2</p>
+    <div className="doryokuchi_title">
+        <p>努力値</p>
+    </div>
+
+    <div className="input">
+    <div className="doryokuchi_label">
+        <label>H</label>
+    </div>
+    <div className="doryokuchi">
+        <input type="button" value="+" id="pluse20" onClick={this.test} className="boxform" /><br/>
+        <input type="number" name="0" min="0" max="252" value={this.state.doryokuchi[0]} step="4" id="HPDoryoku" onClick={this.test} /><br/>
+        <input type="button" value="-" id="minus20" onClick={this.test} className="boxform" />
+    </div>
+    <div className="doryokuchi_label">
+        <label>A</label>
+    </div>
+    <div className="doryokuchi">
+        <input type="button" value="+" id="pluse21" onClick={this.test} className="boxform" /><br/>
+        <input type="number" name="1" min="0" max="252" value={this.state.doryokuchi[1]} step="4" id="AtkDoryoku" onClick={this.test} /><br/>
+        <input type="button" value="-" id="minus21" onClick={this.test} className="boxform" />
+    </div>
+    <div className="doryokuchi_label">
+        <label>D</label>
+    </div>
+    <div className="doryokuchi">
+        <input type="button" value="+" id="pluse22" onClick={this.test} className="boxform" /><br/>
+        <input type="number" name="2" min="0" max="252" value={this.state.doryokuchi[2]} step="4" id="DefDoryoku" onClick={this.test}/><br/>
+        <input type="button" value="-" id="minus22" onClick={this.test} className="boxform" />
+    </div>
+    <div className="doryokuchi_label">
+        <label>C</label>
+    </div>
+    <div className="doryokuchi">
+        <input type="button" value="+" id="pluse23" onClick={this.test} className="boxform" /><br/>
+        <input type="number" name="3" min="0" max="252" value={this.state.doryokuchi[3]} step="4" id="CDoryoku" onClick={this.test} /><br/>
+        <input type="button" value="-" id="minus23" onClick={this.test} className="boxform" />
+    </div>
+    <div className="doryokuchi_label">
+        <label>B</label>
+    </div>
+    <div className="doryokuchi">
+        <input type="button" value="+" id="pluse24" onClick={this.test} className="boxform" /><br/>
+        <input type="number" name="4" min="0" max="252" value={this.state.doryokuchi[4]} step="4" id="BDoryoku" onClick={this.test} /><br/>
+        <input type="button" value="-" id="minus24" onClick={this.test} className="boxform" />
+    </div>
+    <div className="doryokuchi_label">
+        <label>S</label>
+    </div>
+    <div className="doryokuchi">
+        <input type="button" value="+" id="pluse25" onClick={this.test} className="boxform" /><br/>
+        <input type="number" name="5" min="0" max="252" value={this.state.doryokuchi[5]} step="4" id="SPDoryoku" onClick={this.test} /><br/>
+        <input type="button" value="-" id="minus25" onClick={this.test} className="boxform" />
+    </div>
+    </div>
+
+    <div className="input">
+    <br/>
+    <br/>
+    <br/>
+    <div className="doryokuchi_title">
+        <p>個体値</p>
+    </div>
+    <div className="doryokuchi_label">
+        <label>H</label>
+    </div>
+    <div className="doryokuchi">
+        <input type="button" value="+" id="pluse200" onClick={this.SetKotaichi} className="boxform" /><br/>
+        <input type="number" name="num1" min="0" max="31" value={this.state.kotaichi[0]} step="1" id="HPKotai" OnClick={this.SetKotaichi}/><br/>
+        <input type="button" value="-" id="minus200" onClick={this.SetKotaichi} className="boxform" />
+    </div>
+    <div className="doryokuchi_label">
+        <label>A</label>
+    </div>
+    <div className="doryokuchi">
+        <input type="button" value="+" id="pluse211" onClick={this.SetKotaichi} className="boxform" /><br/>
+        <input type="number" name="num1" min="0" max="31" value="0" step="1" id="AtkKotai" OnClick="test()"/><br/>
+        <input type="button" value="-" id="minus211" onClick={this.SetKotaichi} className="boxform" />
+    </div>
+    <div className="doryokuchi_label">
+        <label>D</label>
+    </div>
+    <div className="doryokuchi">
+        <input type="button" value="+" id="pluse222" onClick={this.SetKotaichi} className="boxform" /><br/>
+        <input type="number" name="num1" min="0" max="31" value="0" step="1" id="DefKotai" OnClick="test()"/><br/>
+        <input type="button" value="-" id="minus222" onClick={this.SetKotaichi} className="boxform" />
+    </div>
+    <div className="doryokuchi_label">
+        <label>C</label>
+    </div>
+    <div className="doryokuchi">
+        <input type="button" value="+" id="pluse233" onClick={this.SetKotaichi} className="boxform" /><br/>
+        <input type="number" name="num1" min="0" max="31" value="0" step="1" id="CKotai" OnClick="test()"/><br/>
+        <input type="button" value="-" id="minus233" onClick={this.SetKotaichi} className="boxform" />
+    </div>
+    <div className="doryokuchi_label">
+        <label>B</label>
+    </div>
+    <div className="doryokuchi">
+        <input type="button" value="+" id="pluse244" onClick={this.SetKotaichi} className="boxform" /><br/>
+        <input type="number" name="num1" min="0" max="31" value="0" step="1" id="BKotai" OnClick="test()"/><br/>
+        <input type="button" value="-" id="minus244" onClick={this.SetKotaichi} className="boxform" />
+    </div>
+    <div className="doryokuchi_label">
+        <label>S</label>
+    </div>
+    <div className="doryokuchi">
+        <input type="button" value="+" id="pluse255" onClick={this.SetKotaichi} className="boxform" /><br/>  
+        <input type="number" name="num1" min="0" max="31" value="0" step="1" id="SPKotai" OnClick="test()"/><br/>
+        <input type="button" value="-" id="minus255" onClick={this.SetKotaichi} className="boxform" />
+    </div>
+    </div>
+    </div>
         <br/>
         <br/>
         <br/>
         {this.Radar()};
-        </div>
         </div>);
 
     }

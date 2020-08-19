@@ -17,6 +17,13 @@ input[type=number] {
     padding-right: 1.2em;
 }
 
+.ParamWaku{
+    border: 2px solid #000000;
+    margin-left:10px;
+	width: 600px;
+	height: 350px;
+}
+
 .doryokuchi{
     float: left;
     list-style: none;
