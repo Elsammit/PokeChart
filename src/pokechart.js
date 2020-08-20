@@ -61,6 +61,7 @@ export default class Cooking extends React.Component  {
             var copySpeed = this.state.Speed.slice();
             var copyParam = this.state.BaseParam.slice();
 
+            PokeNum = 1;
             if(PokeNum == 1){
                 var Name = document.getElementById("pokeName").value;
                 for(var i=1;i<result.length;i++){
@@ -93,42 +94,7 @@ export default class Cooking extends React.Component  {
                         })
                     }
                 }
-            }else{
-                var Name2 = document.getElementById("pokeName2").value;
-                console.log("Name:"+Name2);
-                for(var i=1;i<result.length;i++){
-                    if(result[i]["ポケモン名"] == Name2){
-                        console.log("Get Name2");
-                        copyName[1] = result[i]["ポケモン名"];
-                        copyAttack[1] = Number(result[i]["こうげき"]);
-                        copyDefence[1] = Number(result[i]["ぼうぎょ"]);
-                        copyHP[1] = Number(result[i]["HP"]);
-                        copySpAtk[1] = Number(result[i]["とくこう"]);
-                        copySpDef[1] = Number(result[i]["とくぼう"]);
-                        copySpeed[1] = Number(result[i]["すばやさ"]);
-                        
-                        copyParam[0] = Number(result[i]["HP"]);
-                        copyParam[1] = Number(result[i]["こうげき"]);
-                        copyParam[2] = Number(result[i]["ぼうぎょ"]);
-                        copyParam[3] = Number(result[i]["とくこう"]);
-                        copyParam[4] = Number(result[i]["とくぼう"]);
-                        copyParam[5] = Number(result[i]["すばやさ"]);
-
-                        console.log("HP input " + copyHP[1]);
-
-                        this.setState({
-                            Name:copyName,
-                            Attack:copyAttack,
-                            Defense:copyDefence,
-                            HP:copyHP,
-                            SpAtk:copySpAtk,
-                            SpDef:copySpDef,
-                            Speed:copySpeed,
-                            BaseParam:copyParam
-                        })
-                    }
-                }
-            }        
+            }     
             resolve("1");
         });
     }
@@ -370,15 +336,8 @@ export default class Cooking extends React.Component  {
     SpDoyoku = () =>{
         var SPDoryoku = document.getElementById("SPDoryoku").value;
         var SPKotai = document.getElementById("SPKotai").value;
-        //var SPDoryoku2 = document.getElementById("SPDoryoku2").value;
-        //var SPKotai2 = document.getElementById("SPKotai2").value;
         var SPDoryoku2 = 0;
 
-        //var pokeObj = new Object();
-    
-        //pokeObj.Sp = Number(Speed)+Number(SPKotai/2);
-        //pokeObj.Sp2 = Number(Speed2)+Number(SPKotai2/2);
-    
         var copySp = this.state.Speed.slice();
         var BaseParam = this.state.BaseParam.slice();
 
@@ -387,11 +346,9 @@ export default class Cooking extends React.Component  {
 
         if(SPDoryoku > 0){
             copySp[0] = copySp[0] + Number((SPDoryoku - 4)/8);
-            //pokeObj.Sp = Number(pokeObj.Sp) + Number((SPDoryoku - 4)/8);
         }
     
         if(SPDoryoku2 > 0){
-            //pokeObj.Sp2 = Number(pokeObj.Sp2) + Number((SPDoryoku2 - 4)/8);
         }
         console.log("SppedDoryoku:"+copySp[0]);
         this.setState({
@@ -443,66 +400,89 @@ export default class Cooking extends React.Component  {
         );
     }
 
+    Set_DoryokuchiBox = (doryokuchi, doryokuchiID,Plus, Minus) =>{
+        const menulabel = doryokuchiID.substr(0,1);
+
+        return(
+            <div>
+                <div className="doryokuchi_label">
+                    <label>{menulabel}</label>
+                </div>
+                <div className="doryokuchi">
+                    <input type="button" value="+" id={Plus} onClick={this.test} className="boxform" /><br/>
+                    <input type="number" name="0" min="0" max="252" value={doryokuchi} step="4" id={doryokuchiID} onClick={this.test} /><br/>
+                    <input type="button" value="-" id={Minus} onClick={this.test} className="boxform" />
+                </div>
+            </div>
+        );
+    }
+
 
     Input_Doryokuchi = (input) =>{
-        console.log("input:"+input);
-        return(
-        <div>
-        <div className="doryokuchi_title">
-        <p>努力値</p>
-    </div>
+        var PlusArray = ["PokeDoryokupluse0","PokeDoryokupluse1","PokeDoryokupluse2","PokeDoryokupluse3","PokeDoryokupluse4","PokeDoryokupluse5"];
+        var MinusArray = ["PokeDoryokuminus0","PokeDoryokuminus1","PokeDoryokuminus2","PokeDoryokuminus3","PokeDoryokuminus4","PokeDoryokuminus5"];
 
-    <div className="input">
-    <div className="doryokuchi_label">
-        <label>H</label>
-    </div>
-    <div className="doryokuchi">
-        <input type="button" value="+" id="pluse0" onClick={this.test} className="boxform" /><br/>
-        <input type="number" name="0" min="0" max="252" value={this.state.doryokuchi[0]} step="4" id="HPDoryoku" onClick={this.test} /><br/>
-        <input type="button" value="-" id="minus0" onClick={this.test} className="boxform" />
-    </div>
-    <div className="doryokuchi_label">
-        <label>A</label>
-    </div>
-    <div className="doryokuchi">
-        <input type="button" value="+" id="pluse1" onClick={this.test} className="boxform" /><br/>
-        <input type="number" name="1" min="0" max="252" value={this.state.doryokuchi[1]} step="4" id="AtkDoryoku" onClick={this.test} /><br/>
-        <input type="button" value="-" id="minus1" onClick={this.test} className="boxform" />
-    </div>
-    <div className="doryokuchi_label">
-        <label>D</label>
-    </div>
-    <div className="doryokuchi">
-        <input type="button" value="+" id="pluse2" onClick={this.test} className="boxform" /><br/>
-        <input type="number" name="2" min="0" max="252" value={this.state.doryokuchi[2]} step="4" id="DefDoryoku" onClick={this.test}/><br/>
-        <input type="button" value="-" id="minus2" onClick={this.test} className="boxform" />
-    </div>
-    <div className="doryokuchi_label">
-        <label>C</label>
-    </div>
-    <div className="doryokuchi">
-        <input type="button" value="+" id="pluse3" onClick={this.test} className="boxform" /><br/>
-        <input type="number" name="3" min="0" max="252" value={this.state.doryokuchi[3]} step="4" id="CDoryoku" onClick={this.test} /><br/>
-        <input type="button" value="-" id="minus3" onClick={this.test} className="boxform" />
-    </div>
-    <div className="doryokuchi_label">
-        <label>B</label>
-    </div>
-    <div className="doryokuchi">
-        <input type="button" value="+" id="pluse4" onClick={this.test} className="boxform" /><br/>
-        <input type="number" name="4" min="0" max="252" value={this.state.doryokuchi[4]} step="4" id="BDoryoku" onClick={this.test} /><br/>
-        <input type="button" value="-" id="minus4" onClick={this.test} className="boxform" />
-    </div>
-    <div className="doryokuchi_label">
-        <label>S</label>
-    </div>
-    <div className="doryokuchi">
-        <input type="button" value="+" id="pluse5" onClick={this.test} className="boxform" /><br/>
-        <input type="number" name="5" min="0" max="252" value={this.state.doryokuchi[5]} step="4" id="SPDoryoku" onClick={this.test} /><br/>
-        <input type="button" value="-" id="minus5" onClick={this.test} className="boxform" />
-    </div>
-    </div>
-    </div>
+        for(var i=0;i<PlusArray.length;i++){
+            PlusArray[i] =  input + "_" + PlusArray[i];
+            MinusArray[i] = input + "_" + MinusArray[i];
+        }
+
+        return(
+            <div>
+                <div className="doryokuchi_title">
+                    <p>努力値</p>
+                </div>
+
+                <div className="input">
+                    {this.Set_DoryokuchiBox(this.state.doryokuchi[0], "HPDoryoku",PlusArray[0], MinusArray[0])}
+                    {this.Set_DoryokuchiBox(this.state.doryokuchi[1], "AtkDoryoku",PlusArray[1], MinusArray[1])}
+                    {this.Set_DoryokuchiBox(this.state.doryokuchi[2], "DefDoryoku",PlusArray[2], MinusArray[2])}
+                    {this.Set_DoryokuchiBox(this.state.doryokuchi[3], "CDoryoku",PlusArray[3], MinusArray[3])}
+                    {this.Set_DoryokuchiBox(this.state.doryokuchi[4], "BDoryoku",PlusArray[4], MinusArray[4])}
+                    {this.Set_DoryokuchiBox(this.state.doryokuchi[5], "SPDoryoku",PlusArray[5], MinusArray[5])}
+                </div>
+            </div>
+        );
+    }
+
+    Set_KotaichiBox = (Kotaichi, KotaichiID,Plus, Minus) =>{
+        const menulabel = KotaichiID.substr(0,1);
+
+        return(
+            <div>
+                <div className="doryokuchi_label">
+                    <label>{menulabel}</label>
+                </div>
+                <div className="doryokuchi">
+                    <input type="button" value="+" id={Plus} onClick={this.SetKotaichi} className="boxform" /><br/>
+                    <input type="number" name="num1" min="0" max="310" value={Kotaichi} step="1" id={KotaichiID} OnClick={this.SetKotaichi}/><br/>
+                    <input type="button" value="-" id={Minus} onClick={this.SetKotaichi} className="boxform" />
+                </div>
+            </div>
+        );
+    }
+
+    Input_Kotaichi = (input) =>{
+        var PlusArray = ["Pokekotaichipluse0","Pokekotaichipluse1","Pokekotaichipluse2","Pokekotaichipluse3","Pokekotaichipluse4","Pokekotaichipluse5"];
+        var MinusArray = ["Pokekotaichiminus0","Pokekotaichiminus1","Pokekotaichiminus2","Pokekotaichiminus3","Pokekotaichiminus4","Pokekotaichiminus5"];
+
+        for(var i=0;i<PlusArray.length;i++){
+            PlusArray[i] =  input + "_" + PlusArray[i];
+            MinusArray[i] = input + "_" + MinusArray[i];
+        }
+
+        return(
+            <div className="input">
+                <div className="doryokuchi_title">
+                    <p>個体値</p>
+                </div>
+                {this.Set_KotaichiBox(this.state.kotaichi[0], "HPKotai", PlusArray[0], MinusArray[0])}
+                {this.Set_KotaichiBox(this.state.kotaichi[1], "AtkKotai", PlusArray[1], MinusArray[1])}
+                {this.Set_KotaichiBox(this.state.kotaichi[2], "DefKotai", PlusArray[2], MinusArray[2])}
+                {this.Set_KotaichiBox(this.state.kotaichi[3], "CKotai", PlusArray[3], MinusArray[3])}
+                {this.Set_KotaichiBox(this.state.kotaichi[4], "BKotai", PlusArray[4], MinusArray[4])}
+                {this.Set_KotaichiBox(this.state.kotaichi[5], "SPKotai", PlusArray[5], MinusArray[5])}
+            </div>
         );
     }
 
@@ -511,198 +491,23 @@ export default class Cooking extends React.Component  {
             <div className="pokename_title">
                 <h1>ポケモンチャート</h1>
             </div>
-    <div className="pokename_title">
-        <a>ポケモン1名：</a>
-        <input type="text" id="pokeName" maxLength="20"/>
-        <input type="button" value="Click" onClick={() => this.getCSV(1)}></input><br/>
-        <a>ポケモン2名：</a>
-        <input type="text" id="pokeName2" maxLength="20"/>
-        <input type="button" value="Click" onClick={() => this.getCSV(2)}></input><br/>
-    </div>
+            <div className="pokename_title">
+                <a>ポケモン1名：</a>
+                <input type="text" id="pokeName" maxLength="20"/>
+                <input type="button" value="Click" onClick={() => this.getCSV(1)}></input><br/>
+            </div>
     
-    <div className="ParamWaku">
-        <p>ポケモン1</p>
-        {this.Input_Doryokuchi(1)}
-
-    <div className="input">
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <div className="doryokuchi_title">
-        <p>個体値</p>
-    </div>
-    <div className="doryokuchi_label">
-        <label>H</label>
-    </div>
-    <div className="doryokuchi">
-        <input type="button" value="+" id="pluse00" onClick={this.SetKotaichi} className="boxform" /><br/>
-        <input type="number" name="num1" min="0" max="31" value={this.state.kotaichi[0]} step="1" id="HPKotai" OnClick={this.SetKotaichi}/><br/>
-        <input type="button" value="-" id="minus00" onClick={this.SetKotaichi} className="boxform" />
-    </div>
-    <div className="doryokuchi_label">
-        <label>A</label>
-    </div>
-    <div className="doryokuchi">
-        <input type="button" value="+" id="pluse11" onClick={this.SetKotaichi} className="boxform" /><br/>
-        <input type="number" name="num1" min="0" max="31" value="0" step="1" id="AtkKotai" OnClick="test()"/><br/>
-        <input type="button" value="-" id="minus11" onClick={this.SetKotaichi} className="boxform" />
-    </div>
-    <div className="doryokuchi_label">
-        <label>D</label>
-    </div>
-    <div className="doryokuchi">
-        <input type="button" value="+" id="pluse22" onClick={this.SetKotaichi} className="boxform" /><br/>
-        <input type="number" name="num1" min="0" max="31" value="0" step="1" id="DefKotai" OnClick="test()"/><br/>
-        <input type="button" value="-" id="minus22" onClick={this.SetKotaichi} className="boxform" />
-    </div>
-    <div className="doryokuchi_label">
-        <label>C</label>
-    </div>
-    <div className="doryokuchi">
-        <input type="button" value="+" id="pluse33" onClick={this.SetKotaichi} className="boxform" /><br/>
-        <input type="number" name="num1" min="0" max="31" value="0" step="1" id="CKotai" OnClick="test()"/><br/>
-        <input type="button" value="-" id="minus33" onClick={this.SetKotaichi} className="boxform" />
-    </div>
-    <div className="doryokuchi_label">
-        <label>B</label>
-    </div>
-    <div className="doryokuchi">
-        <input type="button" value="+" id="pluse44" onClick={this.SetKotaichi} className="boxform" /><br/>
-        <input type="number" name="num1" min="0" max="31" value="0" step="1" id="BKotai" OnClick="test()"/><br/>
-        <input type="button" value="-" id="minus44" onClick={this.SetKotaichi} className="boxform" />
-    </div>
-    <div className="doryokuchi_label">
-        <label>S</label>
-    </div>
-    <div className="doryokuchi">
-        <input type="button" value="+" id="pluse55" onClick={this.SetKotaichi} className="boxform" /><br/>  
-        <input type="number" name="num1" min="0" max="31" value="0" step="1" id="SPKotai" OnClick="test()"/><br/>
-        <input type="button" value="-" id="minus55" onClick={this.SetKotaichi} className="boxform" />
-    </div>
-    </div>
-    </div>
-    <br/>
-    <div className="ParamWaku">
-        <p>ポケモン2</p>
-    <div className="doryokuchi_title">
-        <p>努力値</p>
-    </div>
-
-    <div className="input">
-    <div className="doryokuchi_label">
-        <label>H</label>
-    </div>
-    <div className="doryokuchi">
-        <input type="button" value="+" id="pluse20" onClick={this.test} className="boxform" /><br/>
-        <input type="number" name="0" min="0" max="252" value={this.state.doryokuchi[0]} step="4" id="HPDoryoku" onClick={this.test} /><br/>
-        <input type="button" value="-" id="minus20" onClick={this.test} className="boxform" />
-    </div>
-    <div className="doryokuchi_label">
-        <label>A</label>
-    </div>
-    <div className="doryokuchi">
-        <input type="button" value="+" id="pluse21" onClick={this.test} className="boxform" /><br/>
-        <input type="number" name="1" min="0" max="252" value={this.state.doryokuchi[1]} step="4" id="AtkDoryoku" onClick={this.test} /><br/>
-        <input type="button" value="-" id="minus21" onClick={this.test} className="boxform" />
-    </div>
-    <div className="doryokuchi_label">
-        <label>D</label>
-    </div>
-    <div className="doryokuchi">
-        <input type="button" value="+" id="pluse22" onClick={this.test} className="boxform" /><br/>
-        <input type="number" name="2" min="0" max="252" value={this.state.doryokuchi[2]} step="4" id="DefDoryoku" onClick={this.test}/><br/>
-        <input type="button" value="-" id="minus22" onClick={this.test} className="boxform" />
-    </div>
-    <div className="doryokuchi_label">
-        <label>C</label>
-    </div>
-    <div className="doryokuchi">
-        <input type="button" value="+" id="pluse23" onClick={this.test} className="boxform" /><br/>
-        <input type="number" name="3" min="0" max="252" value={this.state.doryokuchi[3]} step="4" id="CDoryoku" onClick={this.test} /><br/>
-        <input type="button" value="-" id="minus23" onClick={this.test} className="boxform" />
-    </div>
-    <div className="doryokuchi_label">
-        <label>B</label>
-    </div>
-    <div className="doryokuchi">
-        <input type="button" value="+" id="pluse24" onClick={this.test} className="boxform" /><br/>
-        <input type="number" name="4" min="0" max="252" value={this.state.doryokuchi[4]} step="4" id="BDoryoku" onClick={this.test} /><br/>
-        <input type="button" value="-" id="minus24" onClick={this.test} className="boxform" />
-    </div>
-    <div className="doryokuchi_label">
-        <label>S</label>
-    </div>
-    <div className="doryokuchi">
-        <input type="button" value="+" id="pluse25" onClick={this.test} className="boxform" /><br/>
-        <input type="number" name="5" min="0" max="252" value={this.state.doryokuchi[5]} step="4" id="SPDoryoku" onClick={this.test} /><br/>
-        <input type="button" value="-" id="minus25" onClick={this.test} className="boxform" />
-    </div>
-    </div>
-
-    <div className="input">
-    <br/>
-    <br/>
-    <br/>
-    <div className="doryokuchi_title">
-        <p>個体値</p>
-    </div>
-    <div className="doryokuchi_label">
-        <label>H</label>
-    </div>
-    <div className="doryokuchi">
-        <input type="button" value="+" id="pluse200" onClick={this.SetKotaichi} className="boxform" /><br/>
-        <input type="number" name="num1" min="0" max="31" value={this.state.kotaichi[0]} step="1" id="HPKotai" OnClick={this.SetKotaichi}/><br/>
-        <input type="button" value="-" id="minus200" onClick={this.SetKotaichi} className="boxform" />
-    </div>
-    <div className="doryokuchi_label">
-        <label>A</label>
-    </div>
-    <div className="doryokuchi">
-        <input type="button" value="+" id="pluse211" onClick={this.SetKotaichi} className="boxform" /><br/>
-        <input type="number" name="num1" min="0" max="31" value="0" step="1" id="AtkKotai" OnClick="test()"/><br/>
-        <input type="button" value="-" id="minus211" onClick={this.SetKotaichi} className="boxform" />
-    </div>
-    <div className="doryokuchi_label">
-        <label>D</label>
-    </div>
-    <div className="doryokuchi">
-        <input type="button" value="+" id="pluse222" onClick={this.SetKotaichi} className="boxform" /><br/>
-        <input type="number" name="num1" min="0" max="31" value="0" step="1" id="DefKotai" OnClick="test()"/><br/>
-        <input type="button" value="-" id="minus222" onClick={this.SetKotaichi} className="boxform" />
-    </div>
-    <div className="doryokuchi_label">
-        <label>C</label>
-    </div>
-    <div className="doryokuchi">
-        <input type="button" value="+" id="pluse233" onClick={this.SetKotaichi} className="boxform" /><br/>
-        <input type="number" name="num1" min="0" max="31" value="0" step="1" id="CKotai" OnClick="test()"/><br/>
-        <input type="button" value="-" id="minus233" onClick={this.SetKotaichi} className="boxform" />
-    </div>
-    <div className="doryokuchi_label">
-        <label>B</label>
-    </div>
-    <div className="doryokuchi">
-        <input type="button" value="+" id="pluse244" onClick={this.SetKotaichi} className="boxform" /><br/>
-        <input type="number" name="num1" min="0" max="31" value="0" step="1" id="BKotai" OnClick="test()"/><br/>
-        <input type="button" value="-" id="minus244" onClick={this.SetKotaichi} className="boxform" />
-    </div>
-    <div className="doryokuchi_label">
-        <label>S</label>
-    </div>
-    <div className="doryokuchi">
-        <input type="button" value="+" id="pluse255" onClick={this.SetKotaichi} className="boxform" /><br/>  
-        <input type="number" name="num1" min="0" max="31" value="0" step="1" id="SPKotai" OnClick="test()"/><br/>
-        <input type="button" value="-" id="minus255" onClick={this.SetKotaichi} className="boxform" />
-    </div>
-    </div>
-    </div>
-        <br/>
-        <br/>
-        <br/>
-        {this.Radar()};
+            <div className="ParamWaku">
+                {this.Input_Doryokuchi(1)}
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                {this.Input_Kotaichi(1)}
+            </div>
+            <br/>
+            {this.Radar()};
         </div>);
-
     }
   }
