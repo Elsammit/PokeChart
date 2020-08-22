@@ -1,30 +1,10 @@
 import React, { Component } from 'react';
 import "./pokechart.css";
 import Papa from 'papaparse';
-import pokecsv from './pokemon_status.csv';
 import {
     RadarChart, Tooltip, PolarGrid, PolarAngleAxis, Radar
   } from 'recharts';
 
-
-
-// ポケモン1 データ
-var Name = ""
-var Attack = 0
-var Defense = 0
-var HP = 0
-var SpAtk = 0
-var SpDef = 0
-var Speed = 0
-
-// ポケモン2 データ
-var Name2 = ""
-var Attack2 = 0
-var Defense2 = 0
-var HP2 = 0
-var SpAtk2 = 0
-var SpDef2 = 0
-var Speed2 = 0
 
 export default class Cooking extends React.Component  {
     constructor (props) {
@@ -40,8 +20,9 @@ export default class Cooking extends React.Component  {
             SpAtk:[0, 0],
             SpDef:[0, 0],
             Speed:[0, 0],
+            Poke1St:[0,0,0,0,0,0],
             BaseParam:[0,0,0,0,0,0],
-            doryokuchi:["0","0","0","0","0","0"],
+            doryokuchi:[0,0,0,0,0,0],
             kotaichi:["0","0","0","0","0","0"],
             csvfile:undefined,
             point:0
@@ -62,10 +43,10 @@ export default class Cooking extends React.Component  {
             var copyParam = this.state.BaseParam.slice();
 
             PokeNum = 1;
-            if(PokeNum == 1){
+            if(PokeNum === 1){
                 var Name = document.getElementById("pokeName").value;
                 for(var i=1;i<result.length;i++){
-                    if(result[i]["ポケモン名"] == Name){
+                    if(result[i]["ポケモン名"] === Name){
                         console.log("Get Name");
                         copyName[0] = result[i]["ポケモン名"];
                         copyAttack[0] = Number(result[i]["こうげき"]);
@@ -123,236 +104,108 @@ export default class Cooking extends React.Component  {
                         resolve("0");
                     },
                 });
-                resolve("0");
+                this.SettingParam().then(() =>{
+                    console.log("finish");
+                    resolve("0");
+                })
+                
             }
         });
     }
 
-    test = (e) =>{
+    SetDoryokuchi = (e) =>{
         var copy = this.state.doryokuchi.slice();
-        if(e.target.id.match(/pluse/)){
-            copy[Number(e.target.id.substr(-1))] = Number(copy[Number(e.target.id.substr(-1))]) + 4;
-        }else{
-            copy[Number(e.target.id.substr(-1))] = Number(copy[Number(e.target.id.substr(-1))]) - 4;
+        var checkMax = 0;
+        for(var i=0;i<copy.length;i++){
+            checkMax = checkMax + copy[i];
         }
-        console.log("test:"+e.target.name);
-        console.log(e.target);
+
+        if(e.target.id.match(/pluse/)){
+            if(copy[Number(e.target.id.substr(-1))] < 252 && checkMax < 510){
+                copy[Number(e.target.id.substr(-1))] = Number(copy[Number(e.target.id.substr(-1))]) + 4;
+            }
+        }else{
+            if(copy[Number(e.target.id.substr(-1))] > 4){
+                copy[Number(e.target.id.substr(-1))] = Number(copy[Number(e.target.id.substr(-1))]) - 4;
+            }
+            
+        }
         this.setState({
             doryokuchi:copy
         })
-        this.HPDoyoku();
-        this.AtkDoyoku();
-        this.DefDoyoku();
-        this.CDoyoku();
-        this.BDoyoku();
-        this.SpDoyoku();
+        this.SettingParam().then(() => {
+            console.log("finish");
+        })
+        
     }
 
     SetKotaichi = (e) =>{
         var copy = this.state.kotaichi.slice();
         if(e.target.id.match(/pluse/)){
-            copy[Number(e.target.id.substr(-1))] = Number(copy[Number(e.target.id.substr(-1))]) + 1;
+            if(copy[Number(e.target.id.substr(-1))] <31){
+                copy[Number(e.target.id.substr(-1))] = Number(copy[Number(e.target.id.substr(-1))]) + 1;
+            }
         }else{
-            copy[Number(e.target.id.substr(-1))] = Number(copy[Number(e.target.id.substr(-1))]) - 1;
+            if(copy[Number(e.target.id.substr(-1))] > 0){
+                copy[Number(e.target.id.substr(-1))] = Number(copy[Number(e.target.id.substr(-1))]) - 1;
+            }
+            
         }
         this.setState({
             kotaichi:copy
         })
-        this.HPDoyoku();
-        this.AtkDoyoku();
-        this.DefDoyoku();
-        this.CDoyoku();
-        this.BDoyoku();
-        this.SpDoyoku();
-    }
-
-
-    HPDoyoku = () =>{
-        if(document.getElementById("HPDoryoku") === null || document.getElementById("HPKotai") === null ){
-           console.log("doryoku null !!");
-           return;
-        }
-
-        var HPdoryoku = document.getElementById("HPDoryoku").value;
-        var HPKotai = document.getElementById("HPKotai").value;
-        //var HPdoryoku2 = document.getElementById("HPDoryoku2").value;
-        //var HPKotai2 = document.getElementById("HPKotai2").value;
-        var HPdoryoku2 = 0;
-        var HPKotai2 = 0;
-
-        var copyHP = this.state.HP.slice();
-        var BaseParam = this.state.BaseParam.slice();
-
-        copyHP[0] = BaseParam[0];
-        copyHP[0] = copyHP[0] +Number(HPKotai/2);
-        //copyHP[1] = Number(copyHP[1]) +Number(HPKotai2/2);
-
-        if(HPdoryoku > 0){
-            copyHP[0] = copyHP[0] + Number((HPdoryoku - 4)/8);
-        }
-    
-        if(HPdoryoku2 > 0){
-            copyHP[1] = Number(copyHP[1]) + Number((HPdoryoku2 - 4)/8);
-        }
-
-        console.log("HPDoryoku:"+copyHP[0]);
-    
-        this.setState({
-            HP:copyHP
-        })
-    }
-    
-    AtkDoyoku = () =>{
-        if(document.getElementById("AtkDoryoku") === null || document.getElementById("AtkKotai") === null ){
-            console.log("doryoku null !!");
+        this.SettingParam().then(() =>{
+            console.log("finish");
             return;
-         }
-
-        var Atkdoryoku = document.getElementById("AtkDoryoku").value;
-        var AtkKotai = document.getElementById("AtkKotai").value;
-        var Atkdoryoku2 = 0;
-        //var Atkdoryoku2 = document.getElementById("AtkDoryoku2").value;
-        //var AtkKotai2 = document.getElementById("AtkKotai2").value;
-    
-        //var pokeObj = new Object();
-
-        var copyAtk = this.state.Attack.slice();
-        var BaseParam = this.state.BaseParam.slice();
-
-        copyAtk[0] = BaseParam[1];
-        copyAtk[0] = copyAtk[0] +Number(AtkKotai/2);
-    
-        if(Atkdoryoku > 0){
-            //pokeObj.Atk = Number(pokeObj.Atk) + Number((Atkdoryoku - 4)/8);
-            copyAtk[0] = copyAtk[0] + Number((Atkdoryoku - 4)/8);
-        }
-    
-        if(Atkdoryoku2 > 0){
-            //pokeObj.Atk2 = Number(pokeObj.Atk2) + Number((Atkdoryoku2 - 4)/8);
-        }
-        console.log("AtkDoryoku:"+copyAtk[0]);
-        this.setState({
-            Attack:copyAtk
-        })
-
-    }
-    
-    DefDoyoku = () =>{
-        var DefDoryoku = document.getElementById("DefDoryoku").value;
-        var DefKotai = document.getElementById("DefKotai").value;
-        //var DefDoryoku2 = document.getElementById("DefDoryoku2").value;
-        //var DefKotai2 = document.getElementById("DefKotai2").value;
-        var DefDoryoku2 = 0;
-
-        //var pokeObj = new Object();
-    
-        var copyDef = this.state.Defense.slice();
-        var BaseParam = this.state.BaseParam.slice();
-
-        copyDef[0] = BaseParam[1];
-        copyDef[0] = copyDef[0] +Number(DefKotai/2);
-    
-        //pokeObj.Def = Number(Defense)+Number(/2);
-        //pokeObj.Def2 = Number(Defense)+Number(DefKotai2/2);
-    
-        if(DefDoryoku > 0){
-            //pokeObj.Def = Number(pokeObj.Def) + Number((DefDoryoku - 4)/8);
-            copyDef[0] = copyDef[0] + Number((DefDoryoku - 4)/8);
-        }
-    
-        if(DefDoryoku2 > 0){
-            //pokeObj.Def2 = Number(pokeObj.Def2) + Number((DefDoryoku2 - 4)/8);
-        }
-        console.log("DefDoryoku:"+copyDef[0]);
-        this.setState({
-            Defense:copyDef
         })
     }
-    
-    BDoyoku = () =>{
-        var BDoryoku = document.getElementById("BDoryoku").value;
-        var BKotai = document.getElementById("BKotai").value;
-        //var BDoryoku2 = document.getElementById("BDoryoku2").value;
-        //var BKotai2 = document.getElementById("BKotai2").value;
-        var BDoryoku2 = 0;
-    
-        //var pokeObj = new Object();
-    
-        //pokeObj.B = Number(SpDef)+Number(BKotai/2);
-        //pokeObj.B2 = Number(SpDef)+Number(BKotai2/2);
 
-        var copyB = this.state.SpDef.slice();
-        var BaseParam = this.state.BaseParam.slice();
-
-        copyB[0] = BaseParam[1];
-        copyB[0] = copyB[0] +Number(BKotai/2);
-    
-        if(BDoryoku > 0){
-            //pokeObj.B = Number(pokeObj.B) + Number((BDoryoku - 4)/8);
-            copyB[0] = copyB[0] + Number((BDoryoku - 4)/8);
-        }
-    
-        if(BDoryoku2 > 0){
-            //pokeObj.B2 = Number(pokeObj.B2) + Number((BDoryoku2 - 4)/8);
-        }
-        console.log("BDoryoku:"+copyB[0]);
-        this.setState({
-            SpDef:copyB
-        })
-    }
-    
-    CDoyoku = () =>{
-        var CDoryoku = document.getElementById("CDoryoku").value;
-        var CKotai = document.getElementById("CKotai").value;
-        //var CDoryoku2 = document.getElementById("CDoryoku2").value;
-        //var CKotai2 = document.getElementById("CKotai2").value;
-        var CDoryoku2 = 0;
-
-        //var pokeObj = new Object();
-    
-        //pokeObj.C = Number(SpAtk)+Number(CKotai/2);
-        //pokeObj.C2 = Number(SpAtk2)+Number(CKotai2/2);
+    SettingParam = () =>{
+        return new Promise((resolve, reject) =>{
+            var Param = ["HP", "Atk", "Def", "SP", "B", "C"];
         
-        var copyC = this.state.SpAtk.slice();
-        var BaseParam = this.state.BaseParam.slice();
+            (async () => {
+                for(var i=0;i<Param.length;i++){
+                    await this.CalcParam(Param[i], i);
+                }
+            })().catch(error => console.error(error));
 
-        copyC[0] = BaseParam[1];
-        copyC[0] = copyC[0] +Number(CKotai/2);       
-
-        if(CDoryoku > 0){
-            copyC[0] = copyC[0] + Number((CDoryoku - 4)/8);
-            //pokeObj.C = Number(pokeObj.C) + Number((CDoryoku - 4)/8);
-        }
-    
-        if(CDoryoku2 > 0){
-            //pokeObj.C2 = Number(pokeObj.C2) + Number((CDoryoku2 - 4)/8);
-        }
-        console.log("CDoryoku:"+copyC[0]);
-        this.setState({
-            SpAtk:copyC
+            console.log("bbb");
+            resolve("bbb");
         })
     }
-    
-    SpDoyoku = () =>{
-        var SPDoryoku = document.getElementById("SPDoryoku").value;
-        var SPKotai = document.getElementById("SPKotai").value;
-        var SPDoryoku2 = 0;
 
-        var copySp = this.state.Speed.slice();
-        var BaseParam = this.state.BaseParam.slice();
 
-        copySp[0] = BaseParam[1];
-        copySp[0] = copySp[0] +Number(SPKotai/2);
+    CalcParam = (IdName, Num) =>{
+        return new Promise((resolve, reject) =>{
+            var DoryokuID = IdName + "Doryoku";
+            var KotaiID = IdName + "Kotai";
+            console.log("DoryokuID" + DoryokuID +" KotaiID:" + KotaiID);
 
-        if(SPDoryoku > 0){
-            copySp[0] = copySp[0] + Number((SPDoryoku - 4)/8);
-        }
-    
-        if(SPDoryoku2 > 0){
-        }
-        console.log("SppedDoryoku:"+copySp[0]);
-        this.setState({
-            Speed:copySp
+            if(document.getElementById(DoryokuID) === null || document.getElementById(KotaiID) === null ){
+                console.log("doryoku null !!");
+                resolve(-1);
+            }
+
+            var doryokuPoint = document.getElementById(DoryokuID).value;
+            var KotaiPoint = document.getElementById(KotaiID).value;
+        
+            var copySt = this.state.Poke1St.slice();
+            var BaseParam = this.state.BaseParam.slice();
+
+            copySt[Num] = BaseParam[Num];
+            copySt[Num] = copySt[Num] +Number(KotaiPoint/2);
+
+            if(doryokuPoint > 0){
+                copySt[Num] = copySt[Num] + Number((doryokuPoint - 4)/8);
+            }
+
+            console.log("copySt[Num]:"+copySt[Num]);
+
+            this.setState({
+                Poke1St:copySt
+            })
+            resolve(1);
         })
     }
 
@@ -364,14 +217,15 @@ export default class Cooking extends React.Component  {
         const {Speed} = this.state;
         const {SpAtk} = this.state;
         const {SpDef} = this.state;
+        const {Poke1St} = this.state;
 
         const dataRadar = [
-            { rank: 'HP', poke1: HP[0], poke2: HP[1] },
-            { rank: '攻撃', poke1: Attack[0], poke2: Attack[1] },
-            { rank: '防御', poke1: Defense[0], poke2: Defense[1] },
-            { rank: '素早さ', poke1: Speed[0], poke2: Speed[1] },
-            { rank: '特防', poke1: SpDef[0], poke2: SpDef[1] },
-            { rank: '特攻', poke1: SpAtk[0], poke2: SpAtk[1] },
+            { rank: 'HP', poke1: Poke1St[0], poke2: HP[1] },
+            { rank: '攻撃', poke1: Poke1St[1], poke2: Attack[1] },
+            { rank: '防御', poke1: Poke1St[2], poke2: Defense[1] },
+            { rank: '素早さ', poke1: Poke1St[3], poke2: Speed[1] },
+            { rank: '特防', poke1: Poke1St[4], poke2: SpDef[1] },
+            { rank: '特攻', poke1: Poke1St[5], poke2: SpAtk[1] },
             ];
             
         return(<RadarChart // レーダーチャートのサイズや位置、データを指定
@@ -409,9 +263,9 @@ export default class Cooking extends React.Component  {
                     <label>{menulabel}</label>
                 </div>
                 <div className="doryokuchi">
-                    <input type="button" value="+" id={Plus} onClick={this.test} className="boxform" /><br/>
-                    <input type="number" name="0" min="0" max="252" value={doryokuchi} step="4" id={doryokuchiID} onClick={this.test} /><br/>
-                    <input type="button" value="-" id={Minus} onClick={this.test} className="boxform" />
+                    <input type="button" value="+" id={Plus} onClick={this.SetDoryokuchi} className="boxform" /><br/>
+                    <input type="number" name="doryoku" min="0" max="252" value={doryokuchi} id={doryokuchiID} onChange={this.SetDoryokuchi} /><br/>
+                    <input type="button" value="-" id={Minus} onClick={this.SetDoryokuchi} className="boxform" />
                 </div>
             </div>
         );
@@ -455,7 +309,7 @@ export default class Cooking extends React.Component  {
                 </div>
                 <div className="doryokuchi">
                     <input type="button" value="+" id={Plus} onClick={this.SetKotaichi} className="boxform" /><br/>
-                    <input type="number" name="num1" min="0" max="310" value={Kotaichi} step="1" id={KotaichiID} OnClick={this.SetKotaichi}/><br/>
+                    <input type="number" name="num1" min="0" max="310" value={Kotaichi} step="1" id={KotaichiID} onChange={this.SetKotaichi} /><br/>
                     <input type="button" value="-" id={Minus} onClick={this.SetKotaichi} className="boxform" />
                 </div>
             </div>
@@ -491,13 +345,14 @@ export default class Cooking extends React.Component  {
             <div className="pokename_title">
                 <h1>ポケモンチャート</h1>
             </div>
+            <div className="ParamWaku">
             <div className="pokename_title">
-                <a>ポケモン1名：</a>
+                <a>ポケモン名：</a>
                 <input type="text" id="pokeName" maxLength="20"/>
                 <input type="button" value="Click" onClick={() => this.getCSV(1)}></input><br/>
             </div>
     
-            <div className="ParamWaku">
+           
                 {this.Input_Doryokuchi(1)}
                 <br/>
                 <br/>
