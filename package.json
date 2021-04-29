@@ -3,16 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.3.2",
-    "@testing-library/user-event": "^7.1.2",
+    "@testing-library/jest-dom": "^5.12.0",
+    "@testing-library/react": "^11.2.6",
+    "@testing-library/user-event": "^13.1.6",
     "encoding-japanese": "^1.0.30",
     "papaparse": "^5.2.0",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
     "react-papaparse": "^3.7.1",
-    "react-scripts": "3.4.2",
-    "recharts": "^1.8.5"
+    "react-scripts": "4.0.3",
+    "recharts": "^2.0.9"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -34,5 +34,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "main": "index.js",
+  "repository": "https://github.com/Elsammit/PokeChart.git",
+  "author": "Elsammit <hhashimo25@gmail.com>",
+  "license": "MIT"
 }
